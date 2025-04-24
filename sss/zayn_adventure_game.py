@@ -1,3 +1,4 @@
+
 import time
 import random
 
@@ -10,7 +11,7 @@ def print_pause(message):
 
 class Character:
     """Character class to define player properties and actions."""
-    def __init__(self, game_name, name, story, mission, special_power, guardian_fight, win_fight, final): ##initializing Objects
+    def __init__(self, game_name, name, story, mission, special_power, guardian_fight, win_fight, final): 
         self.game_name = game_name
         self.name = name
         self.story = story
@@ -59,6 +60,7 @@ class Game:
                 return True
             else:
                 print("Invalid input. Try again.")
+
     def get_super_power(self):
         """Let the player choose to take or leave a super power gem."""
         print_pause("While You Were wandering in The jungle you Found A Yellow Gem ")
@@ -73,6 +75,7 @@ class Game:
         else:
             print('Please Choose Between "1" OR "2".')
             self.get_super_power()
+        self.show_score()
 
     def the_guardian_fight(self):
         """Handle the main game fight against the Guardian."""
@@ -100,6 +103,10 @@ class Game:
             print("Please Choose Between 1, 2 OR 3")
             self.the_guardian_fight()
 
+        self.show_score()
+        if self.check_game_ending():
+            return
+
     def option2(self):
         """Second option of the fight."""
         print("You notice a syntax error in its defense system.")
@@ -125,18 +132,6 @@ class Game:
         else:
             print("You Have Escaped From Him. You're Very Lucky!")
             self.end_game()
-
-    def check_game_ending(self):
-        total_score = self.player.score + self.player.health
-        if total_score == 200:
-            print("🎉 Congratulations! You mastered the code world!")
-            self.end_game()
-            return True
-        elif total_score <= 0 or self.player.score <= -50:
-            print("💀 You lost! Trapped in the code forever...")
-            return True
-        return False
-
 
     def final(self):
         """Handle the final decision and ending of the game."""
@@ -166,13 +161,30 @@ class Game:
         else:
             print("Invalid input. Try again.")
             return self.final()
+
         print("Now You Can Find The Backdoor to the Real World\n")
         self.end_game()
+
+    def show_score(self):
+        """Display current score and health."""
+        print(f"Current Score: {self.player.score}, Health: {self.player.health}")
+
+    def check_game_ending(self):
+        """Check if the game should end based on score/health."""
+        total_score = self.player.score + self.player.health
+        if total_score >= 200:
+            print("🎉 Congratulations! You mastered the code world!")
+            self.end_game()
+            return True
+        elif self.player.health <= 0 or self.player.score <= -50:
+            print("💀 You lost! Trapped in the code forever...")
+            return True
+        return False
 
     def total_score(self):
         """Calculate and display the total score."""
         final_score = self.player.score + self.player.health
-        print_pause(f"Score: {self.player.score} + Total Player Health: {self.player.health} = {final_score} ")
+        print_pause(f"Score: {self.player.score} + Health: {self.player.health} = {final_score} ")
         print(f"Final Score: {final_score}")
 
     def end_game(self):
@@ -183,15 +195,12 @@ class Game:
 
 
 if __name__ == "__main__":
-
-# Main game loop
     while True:
-
         zayn = Character(
             game_name="Zayn the Code Trapped",
             name="Zayn",
             story="""Zayn was pulling an all-nighter working on his first ever game.\n
-                    One moment he was typing print("Hello World"), the next—BOOM🔥—the screen flashes🔦,\n
+                    One moment he was typing print(\"Hello World\"), the next—BOOM🔥—the screen flashes🔦,\n
                     the lights flicker, and he’s sucked inside his own code.\n
                     Now he’s trapped in a world made of bugs, functions,\n
                     and corrupted memory. Everything is written in Python...\n
@@ -215,7 +224,7 @@ if __name__ == "__main__":
                     1. Rewrite its core and free it from corruption
                     2. Trap it in an infinite loop for eternity
                     3. Patch its logic to make it friendly""",
-            win_fight="""You defeated the Guardian!
+            win_fight="""You Finished The Game!
                         You Found A Glowing and Shiny Door
                         As You Walk Through It...
                         You Wake Up in Your Room
@@ -225,7 +234,7 @@ if __name__ == "__main__":
         )
 
         game = Game(zayn)
-        if game.intro() is True:
+        if game.intro():
             game.get_super_power()
             game.the_guardian_fight()
 
